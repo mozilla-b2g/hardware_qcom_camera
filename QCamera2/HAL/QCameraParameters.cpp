@@ -1197,6 +1197,7 @@ int32_t QCameraParameters::setPreviewSize(const QCameraParameters& params)
             int old_width, old_height;
             CameraParameters::getPreviewSize(&old_width, &old_height);
             if (width != old_width || height != old_height) {
+
                 m_bNeedRestart = true;
             }
 
@@ -1392,11 +1393,11 @@ int32_t QCameraParameters::setLiveSnapshotSize(const QCameraParameters& params)
                 break;
             }
         }
-
+		int width = 0, height = 0;
         if (!found) {
             // use optimal live snapshot size from supported list,
             // that has same preview aspect ratio
-            int width = 0, height = 0;
+            //int width = 0, height = 0;
             params.getPreviewSize(&width, &height);
 
             double previewAspectRatio = (double)width / height;
@@ -1421,6 +1422,15 @@ int32_t QCameraParameters::setLiveSnapshotSize(const QCameraParameters& params)
                 }
             }
         }
+		int video_width=0,video_height=0;
+		params.getVideoSize(&video_width, &video_height);
+		if( video_width*video_height > m_LiveSnapshotSize.width*m_LiveSnapshotSize.height ) {
+			params.getVideoSize(&m_LiveSnapshotSize.width, &m_LiveSnapshotSize.height);
+			if (m_LiveSnapshotSize.width < width && m_LiveSnapshotSize.height < height) {
+				m_LiveSnapshotSize.width = width;
+				m_LiveSnapshotSize.height = height;
+			}
+		}
     }
     CDBG("%s: live snapshot size %d x %d", __func__,
           m_LiveSnapshotSize.width, m_LiveSnapshotSize.height);
