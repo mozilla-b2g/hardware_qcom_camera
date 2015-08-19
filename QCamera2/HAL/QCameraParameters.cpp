@@ -4627,7 +4627,7 @@ int32_t QCameraParameters::initDefaultParameters()
 #ifdef DEFAULT_DENOISE_MODE_ON
     setWaveletDenoise(DENOISE_ON);
 #else
-    setWaveletDenoise(DENOISE_OFF);
+    setWaveletDenoise(DENOISE_ON);
 #endif
     }
 
